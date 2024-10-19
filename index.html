@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Quiz App</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="quiz-container">
+            <!-- <img src="assets/img/logo.png" alt="Logo de la EES N° 9 de San Andrés de Giles"> -->
+            <h1>Quiz de la 9</h1>
+            <div id="status-bar">
+                <span id="question-number">Pregunta 1/4</span>
+                <span id="score">Puntos: 0</span>
+            </div>
+            <div id="question-container">
+                <p id="question-text">¿Pregunta?</p>
+            </div>
+            <div id="options-container">
+                <!-- Las opciones se generarán dinámicamente -->
+            </div>
+            <button id="next-btn" class="btn">Siguiente</button>
+            <button id="end-btn" class="btn">Finalizar</button>
+            <div id="result-container">
+                <h2>¡Quiz completado!</h2>
+                <p id="final-score"></p>
+                <button id="restart-btn" class="btn">Reiniciar Quiz</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="loading-spinner" style="display: none;"></div>
+
+    <script src="quiz.js"></script>
+</body>
+
+</html>
