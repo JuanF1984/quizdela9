@@ -286,3 +286,71 @@ h1 {
 .option {
     animation: fadeIn 0.3s ease-out;
 }
+
+/* Soporte para modo oscuro del sistema */
+@media (prefers-color-scheme: dark) {
+    .quiz-container {
+        background-color: #1a1a1a;
+        /* Fondo oscuro sólido */
+        opacity: 0.95;
+    }
+
+    #question-container {
+        background-color: #2d2d2d;
+        /* Fondo más oscuro para el contenedor de preguntas */
+        color: #ffffff;
+    }
+
+    #question-text {
+        color: #ffffff;
+        /* Texto blanco para las preguntas */
+    }
+
+    .option {
+        background-color: #333333;
+        /* Fondo sólido oscuro para las opciones */
+        border-color: #4a4a4a;
+        color: #ffffff;
+        /* Texto blanco para las opciones */
+    }
+
+    .option:hover {
+        background-color: #444444;
+        /* Un poco más claro al hover */
+    }
+
+    .option:disabled {
+        background-color: #2a2a2a;
+        color: #888888;
+        /* Texto gris para opciones deshabilitadas */
+    }
+
+    .option.correct {
+        background-color: #1b4d1b !important;
+        /* Verde oscuro para respuestas correctas */
+        color: #ffffff !important;
+        border-color: #2d662d !important;
+    }
+
+    .option.incorrect {
+        background-color: #661a1a !important;
+        /* Rojo oscuro para respuestas incorrectas */
+        color: #ffffff !important;
+        border-color: #802b2b !important;
+    }
+
+    #status-bar {
+        color: #cccccc;
+        /* Color más claro para el texto del status bar */
+    }
+
+    #final-score {
+        color: #ffffff;
+        /* Color blanco para la puntuación final */
+    }
+
+    h1 {
+        color: #ffffff;
+        /* Color blanco para el título */
+    }
+}

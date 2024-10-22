@@ -1,5 +1,6 @@
 // URL de la API de Sheety
 const SHEETY_API_URL = 'https://api.sheety.co/ecb8569b38f7b237fb3d2393b5a46b67/preguntados/hoja1';
+const QUESTIONS_PER_GAME = 10; // Número de preguntas por juego
 
 let questions = [];
 let currentQuestion = 0;
@@ -29,7 +30,7 @@ async function fetchQuestions() {
         const data = await response.json();
 
         // Transformar datos de Sheety al formato necesario
-        questions = data[Object.keys(data)[0]].map(row => ({
+        const allQuestions = data[Object.keys(data)[0]].map(row => ({
             question: row.pregunta,
             options: [
                 row.opcion1,
@@ -37,11 +38,15 @@ async function fetchQuestions() {
                 row.opcion3,
                 row.opcion4
             ],
-            correctAnswer: parseInt(row.respuestaCorrecta) - 1 // Asumiendo que en Sheets está como 1,2,3,4
+            correctAnswer: parseInt(row.respuestaCorrecta) - 1
         }));
 
-        // Mezclar preguntas aleatoriamente
-        shuffleQuestions();
+        // Mezclar todas las preguntas
+        shuffleArray(allQuestions);
+
+        // Seleccionar solo las primeras 10 preguntas
+        questions = allQuestions.slice(0, QUESTIONS_PER_GAME);
+        
         showLoading(false);
         return true;
     } catch (error) {
@@ -52,17 +57,17 @@ async function fetchQuestions() {
     }
 }
 
-// Función para mezclar preguntas
-function shuffleQuestions() {
-    for (let i = questions.length - 1; i > 0; i--) {
+// Función para mezclar un array (Fisher-Yates shuffle)
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
-        [questions[i], questions[j]] = [questions[j], questions[i]];
+        [array[i], array[j]] = [array[j], array[i]];
     }
+    return array;
 }
 
 // Función para inicializar el quiz
 async function initQuiz() {
-    // Ocultar contenido anterior inmediatamente
     const questionContainer = document.getElementById('question-container');
     const optionsContainer = document.getElementById('options-container');
     questionContainer.style.display = 'none';
@@ -72,11 +77,9 @@ async function initQuiz() {
     currentQuestion = 0;
     score = 0;
 
-    // Cargar preguntas
     const questionsLoaded = await fetchQuestions();
     if (!questionsLoaded) return;
 
-    // Mostrar contenido solo después de cargar las preguntas
     questionContainer.style.display = 'block';
     optionsContainer.style.display = 'grid';
     showQuestion();
@@ -92,6 +95,7 @@ function showQuestion() {
     canAnswer = true;
     nextButton.style.display = 'none';
     endButton.style.display = 'none';
+    
     question.options.forEach((option, index) => {
         const button = document.createElement('button');
         button.className = 'option';
@@ -109,7 +113,6 @@ function checkAnswer(selectedIndex) {
     const question = questions[currentQuestion];
     const options = optionsContainer.children;
 
-    // Mostrar respuesta correcta e incorrecta
     for (let i = 0; i < options.length; i++) {
         if (i === question.correctAnswer) {
             options[i].classList.add('correct');
@@ -120,36 +123,35 @@ function checkAnswer(selectedIndex) {
         }
     }
 
-    // Actualizar puntuación
     if (selectedIndex === question.correctAnswer) {
         score++;
         scoreDisplay.textContent = `Puntos: ${score}`;
     }
 
-    // Esperar antes de mostrar los resultados en la última pregunta
-    if (currentQuestion === questions.length - 1) {
+    if (currentQuestion === QUESTIONS_PER_GAME - 1) {
         nextButton.style.display = 'none';
-        endButton.style.display='block';
+        endButton.style.display = 'block';
     } else {
         nextButton.style.display = 'block';
-        endButton.style.display='none'
+        endButton.style.display = 'none';
     }
 }
 
 // Función para mostrar resultados
 function showResults() {
-    endButton.style.display='none';
+    endButton.style.display = 'none';
     const questionContainer = document.getElementById('question-container');
     questionContainer.style.display = 'none';
     optionsContainer.style.display = 'none';
     resultContainer.style.display = 'block';
 
-    finalScore.textContent = `Puntuación final: ${score} de ${questions.length}`;
+    finalScore.textContent = `Puntuación final: ${score} de ${QUESTIONS_PER_GAME}`;
+    restartButton.style.display='block';
 }
 
 // Función para actualizar la barra de estado
 function updateStatusBar() {
-    questionNumber.textContent = `Pregunta ${currentQuestion + 1}/${questions.length}`;
+    questionNumber.textContent = `Pregunta ${currentQuestion + 1}/${QUESTIONS_PER_GAME}`;
     scoreDisplay.textContent = `Puntos: ${score}`;
 }
 
@@ -176,28 +178,20 @@ nextButton.addEventListener('click', () => {
     updateStatusBar();
 });
 
-endButton.addEventListener('click', ()=>{
+endButton.addEventListener('click', () => {
     showResults();
-})
+});
 
-// Event Listeners
 restartButton.addEventListener('click', async () => {
-    // Ocultar todo inmediatamente
     const questionContainer = document.getElementById('question-container');
     questionContainer.style.display = 'none';
     optionsContainer.style.display = 'none';
     resultContainer.style.display = 'none';
 
-    // Mostrar loading
     showLoading(true);
-
-    // Pequeña pausa para asegurar que la UI se actualice
     await new Promise(resolve => setTimeout(resolve, 100));
-
-    // Iniciar el quiz
     await initQuiz();
 });
-
 
 // Iniciar el quiz
 document.addEventListener('DOMContentLoaded', initQuiz);
