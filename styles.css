@@ -181,71 +181,129 @@ h1 {
     color: #333;
 }
 
-/* Media queries para diferentes tamaños de pantalla */
+/* Ajustes específicos para móviles */
 @media (max-width: 768px) {
     .quiz-container {
         padding: var(--spacing-md);
         margin: var(--spacing-sm);
-    }
-
-    #options-container {
-        gap: var(--spacing-sm);
-    }
-}
-
-@media (max-width: 480px) {
-    .quiz-container {
-        padding: var(--spacing-sm);
-    }
-
-    .option {
-        padding: 10px var(--spacing-sm);
-    }
-
-    #status-bar {
-        flex-direction: column;
-        align-items: center;
-        gap: var(--spacing-sm);
-    }
-}
-
-/* Para pantallas muy pequeñas */
-@media (max-width: 320px) {
-    :root {
-        --spacing-sm: 8px;
-        --spacing-md: 16px;
-        --spacing-lg: 24px;
+        max-width: 100%; /* Usar todo el ancho disponible */
+        min-height: 85vh; /* Asegurar que ocupe casi toda la altura de la pantalla */
     }
 
     h1 {
-        font-size: 1.25rem;
+        font-size: 1.8rem; /* Título más grande */
+        margin-bottom: var(--spacing-lg);
+    }
+
+    #status-bar {
+        font-size: 1.2rem; /* Texto de estado más grande */
+        margin-bottom: var(--spacing-lg);
+    }
+
+    #question-container {
+        padding: var(--spacing-lg);
+        margin-bottom: var(--spacing-lg);
+    }
+
+    #question-text {
+        font-size: 1.4rem; /* Texto de pregunta más grande */
+        line-height: 1.6;
+        margin-bottom: var(--spacing-md);
+    }
+
+    #options-container {
+        gap: var(--spacing-md); /* Más espacio entre opciones */
     }
 
     .option {
-        padding: 8px;
+        padding: 20px var(--spacing-md); /* Más padding vertical y horizontal */
+        font-size: 1.2rem; /* Texto de opciones más grande */
+        min-height: 65px; /* Altura mínima para mejor toque */
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px; /* Espacio adicional entre opciones */
+    }
+
+    .btn {
+        padding: 20px;
+        font-size: 1.3rem;
+        min-height: 60px; /* Altura mínima para mejor toque */
+    }
+
+    #final-score {
+        font-size: 1.5rem;
+        margin: var(--spacing-lg) 0;
     }
 }
 
-/* Para pantallas grandes */
-@media (min-width: 1200px) {
+/* Ajustes adicionales para pantallas muy pequeñas */
+@media (max-width: 480px) {
+    .container {
+        padding: 10px; /* Reducir el padding del contenedor principal */
+    }
+
     .quiz-container {
-        padding: calc(var(--spacing-lg) * 1.5);
+        padding: 15px;
     }
 
-    .option:hover {
-        transform: translateY(-3px);
+    h1 {
+        font-size: 1.6rem;
+    }
+
+    #question-text {
+        font-size: 1.3rem;
+    }
+
+    .option {
+        padding: 16px;
+        font-size: 1.1rem;
+    }
+
+    #status-bar {
+        font-size: 1.1rem;
+        padding: 10px 0;
     }
 }
 
-/* Estilos para dispositivos táctiles */
-@media (hover: none) {
-    .option:hover {
-        transform: none;
+/* Ajustes para dispositivos en modo paisaje */
+@media (max-height: 600px) and (orientation: landscape) {
+    .quiz-container {
+        min-height: auto;
+        margin: 10px;
     }
 
-    #next-btn:hover,
-    #restart-btn:hover {
-        transform: none;
+    #options-container {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr); /* 2 opciones por fila */
+        gap: 10px;
+    }
+
+    .option {
+        min-height: 55px;
+        padding: 12px;
+    }
+}
+
+/* Ajustes para pantallas de alta densidad */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    * {
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+}
+
+/* Estilos para asegurar toque cómodo en móviles */
+@media (hover: none) and (pointer: coarse) {
+    .option, .btn {
+        touch-action: manipulation; /* Optimizar para touch */
+    }
+
+    .option {
+        margin-bottom: 15px; /* Espacio adicional para evitar toques accidentales */
+    }
+
+    #options-container {
+        padding: 5px 0; /* Espacio adicional para el contenedor */
     }
 }
 
